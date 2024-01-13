@@ -10,7 +10,7 @@ license = "MIT"
 python = "^3.12.0"
 
 [tool.poetry.group.dev.dependencies]
-pylint = "^3.0.2"
+pylint = "^3.0.3"
 pytest = "^7.4.4"
 black = "^23.12.1"
 pre-commit = "^3.6.0"
