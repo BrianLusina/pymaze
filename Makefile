@@ -29,7 +29,7 @@ install: ## Installs dependencies
 	pipenv install
 
 run: ## Runs application
-	python pytree
+	python -m pytree
 
 .PHONY: test
 test: ## Runs tests
@@ -37,23 +37,23 @@ test: ## Runs tests
 
 .PHONY: test-cover
 test-cover: ## Runs tests with coverage
-	poetry run coverage run --source='./pytree/' -m pytest -v --junitxml junit-report.xml tests/ && coverage xml && coverage report -m
+	poetry run coverage run --source='./src/' -m pytest -v --junitxml junit-report.xml tests/ && coverage xml && coverage report -m
 
 .PHONY: format-black
 format-black: ## Formats the files with black
-	poetry run black pytree/
+	poetry run black src/
 
 .PHONY: lint-flake8
 lint-flake8: ## lints project using flake8
-	poetry run flake8 pytree/
+	poetry run flake8 src/
 
 .PHONY: lint-mypy
 lint-mypy: ## lints project using mypy
-	poetry run mypy pytree/
+	poetry run mypy src/
 
 .PHONY: lint-pylint
 lint-pylint: ## Runs linting with pylint
-	pylint pytree
+	pylint src
 
 .PHONY: lint
 lint: format-black lint-flake8 lint-mypy lint-pylint
