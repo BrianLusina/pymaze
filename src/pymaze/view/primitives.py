@@ -2,6 +2,7 @@
 Primitives that will be used to create XML tags for SVG graphics
 """
 from typing import Protocol, NamedTuple, Tuple
+from dataclasses import dataclass
 
 
 class Primitive(Protocol):
@@ -83,6 +84,24 @@ class DisjointLines(Tuple[Line, ...]):
     def draw(self, **attributes) -> str:
         """draws an SVG disjoint line primitive"""
         return "".join(line.draw(**attributes) for line in self)
+
+
+@dataclass(frozen=True)
+class Rect:
+    """
+    Rectangle primitive which is represented as a data class instead of a tuple as this is not a sequence of elements.
+    This accepts an optional top left corner whose co-ordinates get mixed in with the rest of the attributes through
+    the union operator (|)
+    """
+    top_left: Point | None = None
+
+    def draw(self, **attributes) -> str:
+        """draws a rectangle svg graphic"""
+        if self.top_left:
+            attrs = attributes | {"x": self.top_left.x, "y": self.top_left.y}
+        else:
+            attrs = attributes
+        return tag("rectangle", **attrs)
 
 
 def tag(name: str, value: str | None = None, **attributes) -> str:
