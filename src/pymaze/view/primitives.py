@@ -33,6 +33,25 @@ class Point(NamedTuple):
         return Point(x=self.x + x, y=self.y + y)
 
 
+class Line(NamedTuple):
+    """
+    Line segment that has a start and end points
+    """
+    start: Point
+    end: Point
+
+    def draw(self, **attributes) -> str:
+        """Draws an SVG line primitive"""
+        return tag(
+            "line",
+            x1=self.start.x,
+            y1=self.start.y,
+            x2=self.end.x,
+            y2=self.end.y,
+            **attributes
+        )
+
+
 def tag(name: str, value: str | None = None, **attributes) -> str:
     """
     Generic function that returns an XML tag with the given name, optional value and zero or more attributes
