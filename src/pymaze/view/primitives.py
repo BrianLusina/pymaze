@@ -74,6 +74,17 @@ class Polygon(Tuple[Point, ...]):
         return tag("polygon", points=points, **attributes)
 
 
+class DisjointLines(Tuple[Line, ...]):
+    """
+    Used to combine conveniently combine existing lines instead of individual points, especially when they don’t form a
+    continuous polyline.
+    """
+
+    def draw(self, **attributes) -> str:
+        """draws an SVG disjoint line primitive"""
+        return "".join(line.draw(**attributes) for line in self)
+
+
 def tag(name: str, value: str | None = None, **attributes) -> str:
     """
     Generic function that returns an XML tag with the given name, optional value and zero or more attributes
