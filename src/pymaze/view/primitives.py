@@ -116,6 +116,16 @@ class Text:
         return tag("text", self.content, x=self.point.x, y=self.point.y, **attributes)
 
 
+class NullPrimitive:
+    """
+    Dummy object primitive
+    """
+
+    def draw(self, **attributes) -> str:
+        """draws an empty string"""
+        return ""
+
+
 def tag(name: str, value: str | None = None, **attributes) -> str:
     """
     Generic function that returns an XML tag with the given name, optional value and zero or more attributes
