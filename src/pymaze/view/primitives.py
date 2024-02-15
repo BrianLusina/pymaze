@@ -1,7 +1,7 @@
 """
 Primitives that will be used to create XML tags for SVG graphics
 """
-from typing import Protocol, NamedTuple
+from typing import Protocol, NamedTuple, Tuple
 
 
 class Primitive(Protocol):
@@ -50,6 +50,28 @@ class Line(NamedTuple):
             y2=self.end.y,
             **attributes
         )
+
+
+class Polyline(Tuple[Point, ...]):
+    """
+    Tuple of 2 or more points where the points are connected, however, the first and last point are unconnected
+    """
+
+    def draw(self, **attributes) -> str:
+        """Draws an SVG polyline primitive"""
+        points = " ".join(point.draw() for point in self)
+        return tag("polyline", points=points, **attributes)
+
+
+class Polygon(Tuple[Point, ...]):
+    """
+    Tuple of 2 or more points where the points are connected with the first and last point connected
+    """
+
+    def draw(self, **attributes) -> str:
+        """Draws an SVG polygon primitive"""
+        points = " ".join(point.draw() for point in self)
+        return tag("polygon", points=points, **attributes)
 
 
 def tag(name: str, value: str | None = None, **attributes) -> str:
