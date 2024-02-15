@@ -104,6 +104,18 @@ class Rect:
         return tag("rectangle", **attrs)
 
 
+@dataclass(frozen=True)
+class Text:
+    """
+    Text SVG primitive
+    """
+    content: str
+    point: Point
+
+    def draw(self, **attributes) -> str:
+        return tag("text", self.content, x=self.point.x, y=self.point.y, **attributes)
+
+
 def tag(name: str, value: str | None = None, **attributes) -> str:
     """
     Generic function that returns an XML tag with the given name, optional value and zero or more attributes
