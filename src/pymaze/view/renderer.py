@@ -1,12 +1,23 @@
 """
 Handles SVG rendering
 """
+import textwrap
 from dataclasses import dataclass
+import webbrowser
+import tempfile
 from src.pymaze.models.maze import Maze
+from src.pymaze.models.role import Role
 from src.pymaze.models.solution import Solution
 from src.pymaze.models.square import Square
-from src.pymaze.view.primitives import tag, Rect, Point
+from src.pymaze.view.primitives import tag, Rect, Point, Text, Polyline
 from src.pymaze.view.decomposer import decompose
+
+ROLE_EMOJI = {
+    Role.ENTRANCE: "\N{pedestrian}",
+    Role.EXIT: "\N{chequered flag}",
+    Role.ENEMY: "\N{ghost}",
+    Role.REWARD: "\N{white medium star}",
+}
 
 
 def arrow_marker() -> str:
@@ -66,6 +77,29 @@ class SVGRenderer:
         """
         return self.line_width // 2
 
+    @property
+    def html_content(self) -> str:
+        """HTML content of the svg content"""
+        return textwrap.dedent("""\
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>SVG Preview</title>
+        </head>
+        <body>
+        {0}
+        </body>
+        </html>""").format(self.xml_content)
+
+    def preview(self) -> None:
+        with tempfile.NamedTemporaryFile(
+                mode="w", encoding="utf-8", suffix=".html", delete=False
+        ) as file:
+            file.write(self.html_content)
+        webbrowser.open(f"file://{file.name}")
+
     def render(self, maze: Maze, solution: Solution | None = None) -> SVG:
         """
         Renders a lightweight SVG object which wraps the textual XML content
@@ -108,13 +142,67 @@ class SVGRenderer:
         )
 
     def _draw_square(self, square: Square) -> str:
+        """Draws a square"""
         top_left: Point = self._transform(square)
         tags = [self._draw_border(square, top_left)]
+        if square.role is Role.EXTERIOR:
+            tags.append(exterior(top_left, self.square_size, self.line_width))
+        elif square.role is Role.WALL:
+            tags.append(wall(top_left, self.square_size, self.line_width))
+        elif emoji := ROLE_EMOJI.get(square.role):
+            tags.append(label(emoji, top_left, self.square_size // 2))
         return "".join(tags)
 
     def _draw_border(self, square: Square, top_left: Point) -> str:
+        """Draws the border"""
         return decompose(square.border, top_left, self.square_size).draw(
             stroke_width=self.line_width,
             stroke="black",
             fill="none"
         )
+
+    def _draw_solution(self, solution: Solution) -> str:
+        """Draws the solution"""
+        return Polyline(
+            [
+                self._transform(point, self.square_size // 2)
+                for point in solution
+            ]
+        ).draw(
+            stroke_width=self.line_width * 2,
+            stroke_opacity="50%",
+            stroke="red",
+            fill="none",
+            marker_end="url(#arrow)"
+        )
+
+
+def exterior(top_left: Point, size: int, line_width: int) -> str:
+    """Renders the exterior"""
+    return Rect(top_left).draw(
+        width=size,
+        height=size,
+        stroke_width=line_width,
+        stroke="none",
+        fill="white"
+    )
+
+
+def wall(top_left: Point, size: int, line_width: int) -> str:
+    """Renders a wall"""
+    return Rect(top_left).draw(
+        width=size,
+        height=size,
+        stroke_width=line_width,
+        stroke="none",
+        fill="lightgray"
+    )
+
+
+def label(emoji: str, top_left: Point, offset: int) -> str:
+    """Renders a label"""
+    return Text(emoji, top_left.translate(x=offset, y=offset)).draw(
+        font_size=f"{offset}px",
+        text_anchor="middle",
+        dominant_baseline="middle"
+    )
