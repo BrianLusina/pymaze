@@ -35,7 +35,7 @@ class FileHeader:
     @classmethod
     def read(cls, file: BinaryIO) -> 'FileHeader':
         """reads contents from a supplied file to create a file header"""
-        assert (file.read(len(MAGIC_NUMBER)) == MAGIC_NUMBER, "Unknown file type")
+        assert (file.read(len(MAGIC_NUMBER)) == MAGIC_NUMBER), "Unknown file type"
         # struct.unpack() always returns a tuple, hence the need to add a comma(,).
         format_version, = struct.unpack("B", file.read(1))
         width, height = struct.unpack("<2I", file.read(2 * 4))

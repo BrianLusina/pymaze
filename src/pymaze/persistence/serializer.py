@@ -37,4 +37,4 @@ def compress(square: Square) -> int:
     Returns the corresponding Role and Border values encoded as a compound bit field. It uses bitwise operators to
     compress the two values into a single number.
     """
-    return (square.role << 4) | square.border.value()
+    return (square.role << 4) | square.border.value
