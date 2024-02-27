@@ -4,6 +4,7 @@ File format will contain file header and body
 from typing import BinaryIO
 from dataclasses import dataclass
 import struct
+import array
 
 MAGIC_NUMBER: bytes = b"MAZE"
 
@@ -39,3 +40,31 @@ class FileHeader:
         format_version, = struct.unpack("B", file.read(1))
         width, height = struct.unpack("<2I", file.read(2 * 4))
         return cls(format_version=format_version, width=width, height=height)
+
+
+@dataclass(frozen=True)
+class FileBody:
+    """
+    File body
+    """
+    square_values: array.array
+
+    @classmethod
+    def read(cls, header: FileHeader, file: BinaryIO) -> 'FileBody':
+        """
+        Factory method to create a file body given the header and the file.
+        The 'B' typecode ensures that the correct underlying C type is used. This will be an array of unsigned bytes.
+        This reads the header before so that the internal file pointer is set at the right offset. The information
+        stored in the file header is used to calculate the number of remaining bytes to read by multiplying the width
+        and height of the maze. This data is then converted to a byte array and passed to the FileBody instance
+        """
+        return cls(
+            array.array('B', file.read(header.width * header.height))
+        )
+
+    def write(self, file: BinaryIO) -> None:
+        """
+        Writes the file body to a file
+        """
+        # .tybytes() takes care of serializing the items into the correct data type in the requested byte order
+        file.write(self.square_values.tobytes())
