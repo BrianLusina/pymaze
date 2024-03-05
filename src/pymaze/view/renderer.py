@@ -58,25 +58,6 @@ class SVG:
     """
     xml_content: str
 
-
-@dataclass(frozen=True)
-class SVGRenderer:
-    """
-    A scalable vector graphics renderer will take the square size and line width in pixel coordinates as input
-    parameters assuming sensible defaults
-    """
-    square_size: int = 100
-    line_width: int = 6
-
-    @property
-    def offset(self) -> int:
-        """
-        The offset is the distance from the top and left edge of the drawing space, which takes your line width into
-        account. Without it, a line starting in the top-left corner would be drawn at the very edge of the canvas and
-        partially out of view.
-        """
-        return self.line_width // 2
-
     @property
     def html_content(self) -> str:
         """HTML content of the svg content"""
@@ -99,6 +80,25 @@ class SVGRenderer:
         ) as file:
             file.write(self.html_content)
         webbrowser.open(f"file://{file.name}")
+
+
+@dataclass(frozen=True)
+class SVGRenderer:
+    """
+    A scalable vector graphics renderer will take the square size and line width in pixel coordinates as input
+    parameters assuming sensible defaults
+    """
+    square_size: int = 100
+    line_width: int = 6
+
+    @property
+    def offset(self) -> int:
+        """
+        The offset is the distance from the top and left edge of the drawing space, which takes your line width into
+        account. Without it, a line starting in the top-left corner would be drawn at the very edge of the canvas and
+        partially out of view.
+        """
+        return self.line_width // 2
 
     def render(self, maze: Maze, solution: Solution | None = None) -> SVG:
         """
