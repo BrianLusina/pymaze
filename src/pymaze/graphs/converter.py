@@ -3,6 +3,8 @@ Contains a few functions that converts a maze into a graph
 """
 from typing import NamedTuple, TypeAlias, Set
 
+import networkx as nx
+
 from ..models.square import Square
 from ..models.maze import Maze
 from ..models.role import Role
@@ -86,3 +88,12 @@ def get_edges(maze: Maze, nodes: Set[Node]) -> Set[Edge]:
                 break
 
     return edges
+
+
+def make_graph(maze: Maze) -> nx.Graph:
+    """
+    Creates a NetworkX Graph object given a Maze object
+    """
+    nodes = get_nodes(maze=maze)
+    edges = get_edges(maze=maze, nodes=nodes)
+    return nx.Graph(incoming_graph_data=edges)
