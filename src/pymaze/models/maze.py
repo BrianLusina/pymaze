@@ -4,9 +4,11 @@ Contains the maze model
 from typing import Tuple, Iterator
 from dataclasses import dataclass
 from functools import cached_property
+from pathlib import Path
 
 from .square import Square
 from .role import Role
+from ..persistence.serializer import dump_squares, load_squares
 
 
 @dataclass(frozen=True)
@@ -69,6 +71,15 @@ class Maze:
         """
         return next(square for square in self if square.role is Role.EXIT)
 
+    @classmethod
+    def load(cls, path: Path) -> 'Maze':
+        """Factory function to create a maze from a path to a file"""
+        return cls(squares=tuple(load_squares(path)))
+
+    def dump(self, path: Path) -> None:
+        """Dumps the maze onto the provided path"""
+        dump_squares(self.width, self.height, self.squares, path)
+
 
 def validate_indices(maze: Maze) -> None:
     """
@@ -89,7 +100,7 @@ def validate_rows_columns(maze: Maze) -> None:
         for w in range(maze.width):
             square = maze[h * maze.width + w]
             assert square.row == h, "Wrong square.row"
-            assert square.column == h, "Wrong square.column"
+            assert square.column == w, "Wrong square.column"
 
 
 def validate_entrance(maze: Maze) -> None:
