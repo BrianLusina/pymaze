@@ -1,6 +1,7 @@
 """
 Contains a few functions that converts a maze into a graph
 """
+import math
 from typing import NamedTuple, TypeAlias, Set
 
 import networkx as nx
@@ -20,6 +21,19 @@ class Edge(NamedTuple):
     """
     node1: Node
     node2: Node
+
+    @property
+    def distance(self) -> float:
+        """
+        Calculates the Euclidean distance(length of the line segment between them) between the nodes using math module,
+        whose dist() function takes two points specified as sequences of coordinates. In this case, we provide tuples of
+        the row and column indices of squares corresponding to the nodes. Note that you could define distance
+        differently—for example, as the sum of absolute values of differences in the horizontal and vertical directions.
+        """
+        return math.dist(
+            (self.node1.row, self.node1.column),
+            (self.node2.row, self.node2.column)
+        )
 
 
 def get_nodes(maze: Maze) -> Set[Node]:
@@ -96,4 +110,4 @@ def make_graph(maze: Maze) -> nx.Graph:
     """
     nodes = get_nodes(maze=maze)
     edges = get_edges(maze=maze, nodes=nodes)
-    return nx.Graph(incoming_graph_data=edges)
+    return nx.Graph(incoming_graph_data=(edge.node1, edge.node2, {"weight": edge.distance} for edge in edges))

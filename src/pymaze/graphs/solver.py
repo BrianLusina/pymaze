@@ -1,6 +1,7 @@
 """
 Contains functions to wrap networkX algorithms to solve a maze
 """
+from typing import List
 import networkx as nx
 
 from ..models.maze import Maze
@@ -18,9 +19,29 @@ def solve(maze: Maze) -> Solution | None:
                 nx.shortest_path(
                     G=make_graph(maze=maze),
                     source=maze.entrance,
-                    target=maze.exit
+                    target=maze.exit,
+                    weight="weight"
+
                 )
             )
         )
     except nx.NetworkXException:
         return None
+
+
+def solve_all(maze: Maze) -> List[Solution]:
+    """
+    Returns all the possible solutions of the given maze
+    """
+    try:
+        return [
+            Solution(squares=tuple(path))
+            for path in nx.all_shortest_paths(
+                G=make_graph(maze),
+                source=maze.entrance,
+                target=maze.exit,
+                weight="weight"
+            )
+        ]
+    except nx.NetworkXException:
+        return []
