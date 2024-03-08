@@ -5,12 +5,12 @@ import textwrap
 from dataclasses import dataclass
 import webbrowser
 import tempfile
-from src.pymaze.models.maze import Maze
-from src.pymaze.models.role import Role
-from src.pymaze.models.solution import Solution
-from src.pymaze.models.square import Square
-from src.pymaze.view.primitives import tag, Rect, Point, Text, Polyline
-from src.pymaze.view.decomposer import decompose
+from ..models.maze import Maze
+from ..models.role import Role
+from ..models.solution import Solution
+from ..models.square import Square
+from ..view.primitives import tag, Rect, Point, Text, Polyline
+from ..view.decomposer import decompose
 
 ROLE_EMOJI = {
     Role.ENTRANCE: "\N{pedestrian}",

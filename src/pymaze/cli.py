@@ -4,6 +4,7 @@ Defines the CLI command arguments
 import sys
 import argparse
 from argparse import Namespace
+from pathlib import Path
 
 
 def get_command_line_args() -> Namespace:
@@ -13,9 +14,9 @@ def get_command_line_args() -> Namespace:
         Namespace: populated namespace object
     """
     parser = argparse.ArgumentParser(
-        prog="pytree",
-        description="Gets weather and temperature information for a city",
-        epilog="Thank you for using PyTree CLI",
+        prog="pymaze",
+        description="Solve mazes directly from the CLI",
+        epilog="Thank you for using PyMaze CLI",
     )
 
     # Argument to get the version name
@@ -27,28 +28,10 @@ def get_command_line_args() -> Namespace:
 
     # Argument to get the directory name
     parser.add_argument(
-        "root_dir",
-        metavar="ROOT_DIR",
-        nargs="?",
-        type=str,
+        "path",
+        type=Path,
         default=".",
         help="Generate full directory tree starting at ROOT_DIR",
-    )
-
-    parser.add_argument(
-        "-d",
-        "--dir-only",
-        action="store_true",
-        help="Generate a directory-only tree",
-    )
-
-    parser.add_argument(
-        "-o",
-        "--output-file",
-        metavar="OUTPUT_FILE",
-        nargs="?",
-        default=sys.stdout,
-        help="Generate a full directory tree and save it to a file",
     )
 
     return parser.parse_args()

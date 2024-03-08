@@ -5,10 +5,10 @@ import array
 from typing import Tuple, List, Iterator
 import pathlib
 
-from src.pymaze.models.square import Square
-from src.pymaze.models.border import Border
-from src.pymaze.models.role import Role
-from src.pymaze.persistence.file_format import FileBody, FileHeader
+from ..models.square import Square
+from ..models.border import Border
+from ..models.role import Role
+from ..persistence.file_format import FileBody, FileHeader
 
 FORMAT_VERSION: int = 1
 

@@ -86,7 +86,7 @@ def make_graph(maze: Maze) -> nx.DiGraph:
     """
     nodes = get_nodes(maze=maze)
     edges = get_directed_edges(maze=maze, nodes=nodes)
-    return nx.DiGraph(incoming_graph_data=(edge.node1, edge.node2, {"weight": edge.weight()} for edge in edges))
+    return nx.DiGraph((edge.node1, edge.node2, {"weight": edge.weight()}) for edge in edges)
 
 
 def get_directed_edges(maze: Maze, nodes: Set[Node]) -> Set[Edge]:
