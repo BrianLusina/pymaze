@@ -1,8 +1,7 @@
 """
 Contains a few functions that converts a maze into a graph
 """
-import math
-from typing import NamedTuple, TypeAlias, Set
+from typing import Set
 
 import networkx as nx
 
@@ -10,30 +9,7 @@ from ..models.square import Square
 from ..models.maze import Maze
 from ..models.role import Role
 from ..models.border import Border
-
-Node: TypeAlias = Square
-
-
-class Edge(NamedTuple):
-    """
-    Represents a connection between two nodes in a graph. In this case, a connection between two squares in a maze.
-    This will represent a two way connection as we can traverse from one square to another and vice versa.
-    """
-    node1: Node
-    node2: Node
-
-    @property
-    def distance(self) -> float:
-        """
-        Calculates the Euclidean distance(length of the line segment between them) between the nodes using math module,
-        whose dist() function takes two points specified as sequences of coordinates. In this case, we provide tuples of
-        the row and column indices of squares corresponding to the nodes. Note that you could define distance
-        differently—for example, as the sum of absolute values of differences in the horizontal and vertical directions.
-        """
-        return math.dist(
-            (self.node1.row, self.node1.column),
-            (self.node2.row, self.node2.column)
-        )
+from .edge import Edge, Node
 
 
 def get_nodes(maze: Maze) -> Set[Node]:
@@ -104,10 +80,15 @@ def get_edges(maze: Maze, nodes: Set[Node]) -> Set[Edge]:
     return edges
 
 
-def make_graph(maze: Maze) -> nx.Graph:
+def make_graph(maze: Maze) -> nx.DiGraph:
     """
     Creates a NetworkX Graph object given a Maze object
     """
     nodes = get_nodes(maze=maze)
-    edges = get_edges(maze=maze, nodes=nodes)
-    return nx.Graph(incoming_graph_data=(edge.node1, edge.node2, {"weight": edge.distance} for edge in edges))
+    edges = get_directed_edges(maze=maze, nodes=nodes)
+    return nx.DiGraph(incoming_graph_data=(edge.node1, edge.node2, {"weight": edge.weight()} for edge in edges))
+
+
+def get_directed_edges(maze: Maze, nodes: Set[Node]) -> Set[Edge]:
+    """Retrieves directed edges from a given maze and nodes"""
+    return (edges := get_edges(maze, nodes)) | {edge.flip for edge in edges}
