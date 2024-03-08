@@ -5,12 +5,12 @@ import textwrap
 from dataclasses import dataclass
 import webbrowser
 import tempfile
-from src.pymaze.models.maze import Maze
-from src.pymaze.models.role import Role
-from src.pymaze.models.solution import Solution
-from src.pymaze.models.square import Square
-from src.pymaze.view.primitives import tag, Rect, Point, Text, Polyline
-from src.pymaze.view.decomposer import decompose
+from ..models.maze import Maze
+from ..models.role import Role
+from ..models.solution import Solution
+from ..models.square import Square
+from ..view.primitives import tag, Rect, Point, Text, Polyline
+from ..view.decomposer import decompose
 
 ROLE_EMOJI = {
     Role.ENTRANCE: "\N{pedestrian}",
@@ -58,25 +58,6 @@ class SVG:
     """
     xml_content: str
 
-
-@dataclass(frozen=True)
-class SVGRenderer:
-    """
-    A scalable vector graphics renderer will take the square size and line width in pixel coordinates as input
-    parameters assuming sensible defaults
-    """
-    square_size: int = 100
-    line_width: int = 6
-
-    @property
-    def offset(self) -> int:
-        """
-        The offset is the distance from the top and left edge of the drawing space, which takes your line width into
-        account. Without it, a line starting in the top-left corner would be drawn at the very edge of the canvas and
-        partially out of view.
-        """
-        return self.line_width // 2
-
     @property
     def html_content(self) -> str:
         """HTML content of the svg content"""
@@ -99,6 +80,25 @@ class SVGRenderer:
         ) as file:
             file.write(self.html_content)
         webbrowser.open(f"file://{file.name}")
+
+
+@dataclass(frozen=True)
+class SVGRenderer:
+    """
+    A scalable vector graphics renderer will take the square size and line width in pixel coordinates as input
+    parameters assuming sensible defaults
+    """
+    square_size: int = 100
+    line_width: int = 6
+
+    @property
+    def offset(self) -> int:
+        """
+        The offset is the distance from the top and left edge of the drawing space, which takes your line width into
+        account. Without it, a line starting in the top-left corner would be drawn at the very edge of the canvas and
+        partially out of view.
+        """
+        return self.line_width // 2
 
     def render(self, maze: Maze, solution: Solution | None = None) -> SVG:
         """

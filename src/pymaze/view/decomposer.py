@@ -1,8 +1,8 @@
 """
 Decompose module used to decompose primitives
 """
-from src.pymaze.models.border import Border
-from src.pymaze.view.primitives import Line, Point, Primitive, Polygon, Polyline, DisjointLines, NullPrimitive
+from ..models.border import Border
+from ..view.primitives import Line, Point, Primitive, Polygon, Polyline, DisjointLines, NullPrimitive
 
 
 def decompose(border: Border, top_left: Point, square_size: int) -> Primitive:
