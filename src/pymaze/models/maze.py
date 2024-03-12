@@ -16,9 +16,10 @@ class Maze:
     """
     Represents the maze
     """
+
     squares: Tuple[Square, ...]
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Validates the maze on initialization"""
         validate_indices(self)
         validate_rows_columns(self)
@@ -72,7 +73,7 @@ class Maze:
         return next(square for square in self if square.role is Role.EXIT)
 
     @classmethod
-    def load(cls, path: Path) -> 'Maze':
+    def load(cls, path: Path) -> "Maze":
         """Factory function to create a maze from a path to a file"""
         return cls(squares=tuple(load_squares(path)))
 
@@ -87,7 +88,9 @@ def validate_indices(maze: Maze) -> None:
     Args:
         maze (Maze): Maze to validate
     """
-    assert [square.index for square in maze] == list(range(len(maze.squares))), "Wrong square.index"
+    assert [square.index for square in maze] == list(
+        range(len(maze.squares))
+    ), "Wrong square.index"
 
 
 def validate_rows_columns(maze: Maze) -> None:
@@ -105,9 +108,13 @@ def validate_rows_columns(maze: Maze) -> None:
 
 def validate_entrance(maze: Maze) -> None:
     """Validates that a maze has an entrance"""
-    assert 1 == sum(1 for square in maze if square.role is Role.ENTRANCE), "Must have exactly 1 entrance"
+    assert 1 == sum(
+        1 for square in maze if square.role is Role.ENTRANCE
+    ), "Must have exactly 1 entrance"
 
 
 def validate_exit(maze: Maze) -> None:
     """Validates that a maze has exactly one exit"""
-    assert 1 == sum(1 for square in maze if square.role is Role.EXIT), "Must have exactly 1 exit"
+    assert 1 == sum(
+        1 for square in maze if square.role is Role.EXIT
+    ), "Must have exactly 1 exit"

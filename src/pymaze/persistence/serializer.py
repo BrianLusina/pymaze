@@ -13,7 +13,9 @@ from ..persistence.file_format import FileBody, FileHeader
 FORMAT_VERSION: int = 1
 
 
-def dump_squares(width: int, height: int, squares: Tuple[Square, ...], path: pathlib.Path) -> None:
+def dump_squares(
+    width: int, height: int, squares: Tuple[Square, ...], path: pathlib.Path
+) -> None:
     """
     Serializes and dumps the maze into a given file on the path specified
     """
@@ -24,12 +26,14 @@ def dump_squares(width: int, height: int, squares: Tuple[Square, ...], path: pat
         body.write(file)
 
 
-def serializer(width: int, height: int, squares: Tuple[Square, ...]) -> Tuple[FileHeader, FileBody]:
+def serializer(
+    width: int, height: int, squares: Tuple[Square, ...]
+) -> Tuple[FileHeader, FileBody]:
     """
     Serializes a maze into a file header and body
     """
     header = FileHeader(FORMAT_VERSION, width, height)
-    body = FileBody(array.array('B', map(compress, squares)))
+    body = FileBody(array.array("B", map(compress, squares)))
     return header, body
 
 
@@ -60,7 +64,7 @@ def deserialize(header: FileHeader, body: FileBody) -> Iterator[Square]:
 
 def decompress(square_value: int) -> Tuple[Border, Role]:
     """Decompresses a square value into a tuple of a border and its Role"""
-    return Border(square_value & 0xf), Role(square_value >> 4)
+    return Border(square_value & 0xF), Role(square_value >> 4)
 
 
 def compress(square: Square) -> int:

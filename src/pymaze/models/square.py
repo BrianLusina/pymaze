@@ -18,6 +18,7 @@ class Square:
         border (Border): The type of border for this square
         role (Role): The role of this square, Defaults to None.
     """
+
     index: int
     row: int
     column: int

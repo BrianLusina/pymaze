@@ -55,8 +55,7 @@ def validate_corridor(current: Square, following: Square) -> Square:
     Return:
         Square: The next square
     """
-    assert any([
-        current.row == following.row,
-        current.column == following.column
-    ]), "Squares must lie on the same row or column"
+    assert any(
+        [current.row == following.row, current.column == following.column]
+    ), "Squares must lie on the same row or column"
     return following

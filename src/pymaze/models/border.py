@@ -9,6 +9,7 @@ class Border(IntFlag):
     Contains the direction of the border on a given square. This will allow combining the members to create a composite
     value.
     """
+
     EMPTY = 0
     TOP = auto()
     BOTTOM = auto()
@@ -23,11 +24,11 @@ class Border(IntFlag):
         Returns:
             bool: True if this is a corner, False otherwise
         """
-        return self in (
+        return self in (  # type: ignore[comparison-overlap]
             self.TOP | self.LEFT,
             self.TOP | self.RIGHT,
             self.BOTTOM | self.LEFT,
-            self.BOTTOM | self.RIGHT
+            self.BOTTOM | self.RIGHT,
         )
 
     @property

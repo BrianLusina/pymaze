@@ -20,8 +20,7 @@ def solve(maze: Maze) -> Solution | None:
                     G=make_graph(maze=maze),
                     source=maze.entrance,
                     target=maze.exit,
-                    weight="weight"
-
+                    weight="weight",
                 )
             )
         )
@@ -40,7 +39,7 @@ def solve_all(maze: Maze) -> List[Solution]:
                 G=make_graph(maze),
                 source=maze.entrance,
                 target=maze.exit,
-                weight="weight"
+                weight="weight",
             )
         ]
     except nx.NetworkXException:

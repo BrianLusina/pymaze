@@ -8,6 +8,7 @@ class Role(IntEnum):
     """
     Represents the role of each square in the maze
     """
+
     NONE = 0
     ENEMY = auto()
     ENTRANCE = auto()

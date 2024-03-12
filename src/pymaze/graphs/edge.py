@@ -15,6 +15,7 @@ class Edge(NamedTuple):
     Represents a connection between two nodes in a graph. In this case, a connection between two squares in a maze.
     This will represent a two-way connection as we can traverse from one square to another and vice versa.
     """
+
     node1: Node
     node2: Node
 
@@ -27,11 +28,10 @@ class Edge(NamedTuple):
         differently—for example, as the sum of absolute values of differences in the horizontal and vertical directions.
         """
         return math.dist(
-            (self.node1.row, self.node1.column),
-            (self.node2.row, self.node2.column)
+            (self.node1.row, self.node1.column), (self.node2.row, self.node2.column)
         )
 
-    def weight(self, bonus=1, penalty=2) -> float:
+    def weight(self, bonus: int = 1, penalty: int = 2) -> float:
         """
         Retrieves the weight of the edge given a bonus(defaulted to 1) and a penalty(defaulted to 2).
         By default, this method subtracts one point from the baseline distance if the current edge leads to a reward.
@@ -51,4 +51,4 @@ class Edge(NamedTuple):
         """
         Flips the edge from undirected to directed and vice versa
         """
-        return Edge(self.node2, self.node1)
+        return Edge(self.node2, self.node1)  # type: ignore[return-value]

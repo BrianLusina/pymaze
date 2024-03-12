@@ -2,7 +2,15 @@
 Decompose module used to decompose primitives
 """
 from ..models.border import Border
-from ..view.primitives import Line, Point, Primitive, Polygon, Polyline, DisjointLines, NullPrimitive
+from ..view.primitives import (
+    Line,
+    Point,
+    Primitive,
+    Polygon,
+    Polyline,
+    DisjointLines,
+    NullPrimitive,
+)
 
 
 def decompose(border: Border, top_left: Point, square_size: int) -> Primitive:
@@ -34,14 +42,7 @@ def decompose(border: Border, top_left: Point, square_size: int) -> Primitive:
     right = Line(top_right, bottom_right)
 
     if border is Border.LEFT | Border.TOP | Border.RIGHT | Border.BOTTOM:
-        return Polygon(
-            [
-                top_left,
-                top_right,
-                bottom_left,
-                bottom_right
-            ]
-        )
+        return Polygon([top_left, top_right, bottom_left, bottom_right])
 
     if border is Border.BOTTOM | Border.LEFT | Border.TOP:
         return Polyline(

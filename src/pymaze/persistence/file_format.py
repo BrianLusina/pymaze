@@ -14,6 +14,7 @@ class FileHeader:
     """
     Defines the file header of the file.
     """
+
     format_version: int
     width: int
     height: int
@@ -33,11 +34,11 @@ class FileHeader:
         file.write(struct.pack("<2I", self.width, self.height))
 
     @classmethod
-    def read(cls, file: BinaryIO) -> 'FileHeader':
+    def read(cls, file: BinaryIO) -> "FileHeader":
         """reads contents from a supplied file to create a file header"""
-        assert (file.read(len(MAGIC_NUMBER)) == MAGIC_NUMBER), "Unknown file type"
+        assert file.read(len(MAGIC_NUMBER)) == MAGIC_NUMBER, "Unknown file type"
         # struct.unpack() always returns a tuple, hence the need to add a comma(,).
-        format_version, = struct.unpack("B", file.read(1))
+        (format_version,) = struct.unpack("B", file.read(1))
         width, height = struct.unpack("<2I", file.read(2 * 4))
         return cls(format_version=format_version, width=width, height=height)
 
@@ -47,10 +48,11 @@ class FileBody:
     """
     File body
     """
+
     square_values: array.array
 
     @classmethod
-    def read(cls, header: FileHeader, file: BinaryIO) -> 'FileBody':
+    def read(cls, header: FileHeader, file: BinaryIO) -> "FileBody":
         """
         Factory method to create a file body given the header and the file.
         The 'B' typecode ensures that the correct underlying C type is used. This will be an array of unsigned bytes.
@@ -58,9 +60,7 @@ class FileBody:
         stored in the file header is used to calculate the number of remaining bytes to read by multiplying the width
         and height of the maze. This data is then converted to a byte array and passed to the FileBody instance
         """
-        return cls(
-            array.array('B', file.read(header.width * header.height))
-        )
+        return cls(array.array("B", file.read(header.width * header.height)))
 
     def write(self, file: BinaryIO) -> None:
         """
