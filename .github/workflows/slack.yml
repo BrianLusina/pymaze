@@ -16,44 +16,29 @@ on:
 jobs:
   onSuccess:
     name: Success Notification
-    runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.workflow_run.head_branch }}
-
-      - name: Slack Notification
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_CHANNEL: cicd
-          SLACK_COLOR: "good"
-          SLACK_ICON: https://github.com/ratholos.png?size=48
-          SLACK_ICON_EMOJI: ":large_green_circle:"
-          SLACK_USERNAME: Ratholos
-          SLACK_TITLE: ${{ github.repository }} - ${{ github.event.workflow_run.name }} Workflow Succeeded
-          SLACK_MESSAGE: 'Success'
-          SLACK_FOOTER: "Regards, Ratholos"
-          SLACK_WEBHOOK: ${{ secrets.PIPELINES_SLACK_WEBHOOK }}
+    uses: SanctumLabs/ci-workflows/.github/workflows/slack_notification.yml@main
+    with:
+      slack_username: Ratholos
+      slack_channel: cicd
+      slack_icon: https://github.com/ratholos.png?size=48
+      slack_icon_emoji: ":large_green_circle:"
+      slack_title: ${{ github.repository }} - ${{ github.event.workflow_run.name }} Workflow Succeeded
+      slack_color: "good"
+    secrets:
+      slack_webhook: ${{ secrets.PIPELINES_SLACK_WEBHOOK }}
 
   onFailure:
     name: Failure Notification
-    runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Slack Notification
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_CHANNEL: cicd
-          SLACK_COLOR: "danger"
-          SLACK_ICON: https://github.com/ratholos.png?size=48
-          SLACK_ICON_EMOJI: ":red_circle:"
-          SLACK_USERNAME: Ratholos
-          SLACK_TITLE: ${{ github.repository }} - ${{ github.event.workflow_run.name }} Workflow Failed
-          SLACK_MESSAGE: ':cry:'
-          SLACK_FOOTER: "Regards, Ratholos"
-          SLACK_WEBHOOK: ${{ secrets.PIPELINES_SLACK_WEBHOOK }}
+    uses: SanctumLabs/ci-workflows/.github/workflows/slack_notification.yml@main
+    with:
+      slack_username: Ratholos
+      slack_channel: cicd
+      slack_icon: https://github.com/ratholos.png?size=48
+      slack_message: ":cry:"
+      slack_title: ${{ github.repository }} - ${{ github.event.workflow_run.name }} Workflow Failed
+      slack_icon_emoji: ":red_circle:"
+      slack_color: "danger"
+    secrets:
+      slack_webhook: ${{ secrets.PIPELINES_SLACK_WEBHOOK }}
